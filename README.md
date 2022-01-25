@@ -1,0 +1,2 @@
+# tradingplatform
+ A trading app

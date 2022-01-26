@@ -66,5 +66,6 @@ def insert_into_stock_table(symbol: str, name: str, exchange: str, shortable: bo
     try:
         run_sql(f"""INSERT INTO stock (symbol, name, exchange, shortable) 
                     VALUES ('{symbol}','{name}','{exchange}','{shortable}')""")
+        print(f"Inserted record for {symbol}.")
     except Exception as e:
         print(e)

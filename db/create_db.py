@@ -3,12 +3,14 @@ import db.helpers as helpers
 def drop_schema():
     helpers.run_sql("DROP SCHEMA public CASCADE")
     helpers.run_sql("CREATE SCHEMA public")
+    print("Dropped and recreated SCHEMA public.")
 
 def drop_tables():
     helpers.run_sql("DROP TABLE stock CASCADE")
     helpers.run_sql("DROP TABLE stock_price_daily CASCADE")
     helpers.run_sql("DROP TABLE strategy CASCADE")
     helpers.run_sql("DROP TABLE stock_strategy CASCADE")
+    print("Dropped all tables.")
 
 def create_tables():
     helpers.run_sql("""
@@ -20,6 +22,7 @@ def create_tables():
             shortable BOOLEAN NOT NULL
         )
     """)
+    print("Stock table created")
 
     helpers.run_sql("""
         CREATE TABLE IF NOT EXISTS stock_price_daily (
@@ -38,6 +41,7 @@ def create_tables():
             UNIQUE (stock_id,date)
         )
     """)
+    print("Stock price daily table created.")
 
     helpers.run_sql("""
         CREATE TABLE IF NOT EXISTS strategy (
@@ -47,6 +51,7 @@ def create_tables():
             run_frequency TEXT
         )
     """)
+    print("Strategy table created.")
 
     helpers.run_sql("""
         CREATE TABLE IF NOT EXISTS stock_strategy (
@@ -57,6 +62,7 @@ def create_tables():
             UNIQUE (stock_id, strategy_id)
         )
     """)
+    print("Stock strategy table created.")
 
 def insert_strategies():
     helpers.run_sql("""
@@ -73,4 +79,6 @@ def insert_strategies():
     insert into strategy (name, description, run_frequency) 
     values ('bollinger_bands', 'A strategy that looks detects when a candle closes out of the bollinger band and will long or short based on the next candle closing within the band.','1 day')
     """)
+
+    print("Strategies inserted into strategy table.")
 

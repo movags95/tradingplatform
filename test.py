@@ -1,6 +1,8 @@
 import tradeapi.alpaca_helpers as apihelper
 import db.helpers as dbhelper
 
+apihelper.populate_stocks()
+
 # assets = apihelper.list_assets()
 # exchanges = []
 # symbols = []
@@ -9,16 +11,10 @@ import db.helpers as dbhelper
 #         exchanges.append(asset.exchange)
 #     if asset.exchange == 'AMEX':
 #         symbols.append(asset.symbol)
-
-
-    
-
 # print(exchanges)
 # # print(symbols)
 
-symbols = dbhelper.existing_symbols()
+# print(dbhelper.insert_into_stock_table('AAPL',"hello's","sexy",True))
 
-for symbol in symbols:
-    print(symbol['symbol'])
 
-dbhelper.insert_into_stock_table('AMC',"AMC Entertainment",'NYSE',True)
+

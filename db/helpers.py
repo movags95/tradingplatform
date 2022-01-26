@@ -62,6 +62,7 @@ def existing_symbols():
 
 def insert_into_stock_table(symbol: str, name: str, exchange: str, shortable: bool):
     """inserts a record into the stock table"""
+    name = name.replace("'", "''")
     try:
         run_sql(f"""INSERT INTO stock (symbol, name, exchange, shortable) 
                     VALUES ('{symbol}','{name}','{exchange}','{shortable}')""")

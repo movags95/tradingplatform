@@ -1,5 +1,6 @@
 import alpaca_trade_api as tradeapi
 import tradeapi.config as config
+import db.helpers as dbhelpers
 
 def connect_api():
     try:
@@ -18,3 +19,13 @@ def list_assets():
         print(e)
     
     return assets
+
+def populate_stocks():
+    assets = list_assets()
+    existing_symbols = dbhelpers.existing_symbols()
+    for asset in assets:
+        try:
+            if asset.status == "active" and asset.tradable is True and asset.symbol not in existing_symbols:
+                dbhelpers.insert_into_stock_table(asset.symbol, asset.name, asset.exchange, asset.shortable)
+        except Exception as e:
+            print(e) 

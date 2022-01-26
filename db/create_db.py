@@ -1,8 +1,14 @@
 import db.helpers as helpers
 
-def drop_tables():
+def drop_schema():
     helpers.run_sql("DROP SCHEMA public CASCADE")
     helpers.run_sql("CREATE SCHEMA public")
+
+def drop_tables():
+    helpers.run_sql("DROP TABLE stock CASCADE")
+    helpers.run_sql("DROP TABLE stock_price_daily CASCADE")
+    helpers.run_sql("DROP TABLE strategy CASCADE")
+    helpers.run_sql("DROP TABLE stock_strategy CASCADE")
 
 def create_tables():
     helpers.run_sql("""

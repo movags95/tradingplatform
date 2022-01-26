@@ -1,6 +1,6 @@
 import psycopg2
 import psycopg2.extras
-import config as config
+import db.config as config
 
 
 def connect_pgdb(hostname="localhost", db_name="tradingplatform", username="postgres", passwd="postgres", port=5555):

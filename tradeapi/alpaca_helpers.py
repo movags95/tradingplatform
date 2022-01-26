@@ -8,3 +8,13 @@ def connect_api():
         print(e)
 
     return api
+
+
+def list_assets():
+    try:
+        api = connect_api()
+        assets = api.list_assets()
+    except Exception as e:
+        print(e)
+    
+    return assets

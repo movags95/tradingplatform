@@ -4,6 +4,7 @@ import db.config as config
 
 
 def connect_pgdb(hostname="localhost", db_name="tradingplatform", username="postgres", passwd="postgres", port=5555):
+    """connects to the postgresdb and returns a connection."""
     try:
         conn = psycopg2.connect(
             host=config.HOSTNAME,
@@ -19,6 +20,7 @@ def connect_pgdb(hostname="localhost", db_name="tradingplatform", username="post
 
 
 def sql_stmt_type(sql_stmt):
+    """determines the type of a sql statement. returns a string."""
     sql_type = None
     sql = sql_stmt.upper()
     if 'INSERT' in sql:
@@ -51,3 +53,17 @@ def run_sql(sql_stmt):
     connection.close()
 
     return rows
+
+def existing_symbols():
+    """returns a list of existing symbols in the database."""
+    rows = run_sql("SELECT * FROM stock")
+    symbols = [row['symbol'] for row in rows]
+    return rows
+
+def insert_into_stock_table(symbol: str, name: str, exchange: str, shortable: bool):
+    """inserts a record into the stock table"""
+    try:
+        run_sql(f"""INSERT INTO stock (symbol, name, exchange, shortable) 
+                    VALUES ('{symbol}','{name}','{exchange}','{shortable}')""")
+    except Exception as e:
+        print(e)

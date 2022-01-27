@@ -1,10 +1,14 @@
 import alpaca_trade_api as tradeapi
 import tradeapi.config as config
 import db.helpers as dbhelpers
+import timezn.helpers as timehelpers
+from datetime import date, timedelta, datetime
+
 
 def connect_api():
     try:
-        api = tradeapi.REST(config.ALPACA_API_KEY, config.ALPACA_API_SECRET_KEY, config.ALPACA_BASE_URL)
+        api = tradeapi.REST(config.ALPACA_API_KEY,
+                            config.ALPACA_API_SECRET_KEY, config.ALPACA_BASE_URL)
         print("API connection successful.")
     except Exception as e:
         print(e)
@@ -18,8 +22,9 @@ def list_assets():
         assets = api.list_assets()
     except Exception as e:
         print(e)
-    
+
     return assets
+
 
 def populate_stocks():
     assets = list_assets()
@@ -28,7 +33,49 @@ def populate_stocks():
     for asset in assets:
         try:
             if asset.status == "active" and asset.tradable is True and asset.symbol not in existing_symbols:
-                dbhelpers.insert_into_stock_table(asset.symbol, asset.name, asset.exchange, asset.shortable)
+                dbhelpers.insert_into_stock_table(
+                    asset.symbol, asset.name, asset.exchange, asset.shortable)
         except Exception as e:
-            print(e) 
+            print(e)
     print("Population complete.")
+
+
+def populate_stock_price_daily(
+    symbols, 
+    Until=date.today(),
+    From=date.today() - timedelta(50)
+):
+    """
+    Function that populates the stock_price_daily table from alpaca.
+    Inputs:
+    - a list of symbols
+    - from/until is optional: date (default to todays date)
+    """
+    api = connect_api()
+    chunk_size = config.ALPACA_REQUEST_LIMIT
+    dtstart = timehelpers.to_alpaca_timestamp_format(From)
+    dtend = timehelpers.to_alpaca_timestamp_format(Until)
+
+    try:
+        for i in range(0, len(symbols), chunk_size):
+            symbol_chunk = symbols[i:i+chunk_size]
+            barsets = api.get_barset(
+                symbol_chunk, 'day', limit=1000, 
+                start=dtstart, end=dtend
+                )
+            for symbol in barsets:
+                dates = dbhelpers.get_symbol_dates(symbol)
+                stock_id = dbhelpers.symbol_to(symbol)[1]
+                for bar in barsets[symbol]:
+                    if bar.t.date() not in dates:
+                        print(f'Inserting record for {symbol}: {bar.t.date()}...')
+                        dbhelpers.insert_into_stock_price_daily_table(
+                            stock_id, bar.t.date(), bar.o, bar.h, bar.l, bar.c, bar.v
+                        )
+                    else:
+                        print(f'Date {bar.t.date()} exists for {symbol}. Skipping...')
+    
+
+    except Exception as e:
+        print(e)
+                

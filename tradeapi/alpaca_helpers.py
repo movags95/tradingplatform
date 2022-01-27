@@ -24,10 +24,11 @@ def list_assets():
 def populate_stocks():
     assets = list_assets()
     existing_symbols = dbhelpers.existing_symbols()
-    print("Populating stocks from API")
+    print("Populating stocks from API.")
     for asset in assets:
         try:
             if asset.status == "active" and asset.tradable is True and asset.symbol not in existing_symbols:
                 dbhelpers.insert_into_stock_table(asset.symbol, asset.name, asset.exchange, asset.shortable)
         except Exception as e:
             print(e) 
+    print("Population complete.")

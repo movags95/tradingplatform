@@ -58,7 +58,7 @@ def existing_symbols():
     """returns a list of existing symbols in the database."""
     rows = run_sql("SELECT * FROM stock")
     symbols = [row['symbol'] for row in rows]
-    return rows
+    return symbols
 
 def insert_into_stock_table(symbol: str, name: str, exchange: str, shortable: bool):
     """inserts a record into the stock table"""

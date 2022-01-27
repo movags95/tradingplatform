@@ -1,5 +1,7 @@
-import db.create_db as create_db
+from db.create_db import drop_tables,create_tables,insert_strategies
+from tradeapi.alpaca_helpers import populate_stocks
 
-create_db.drop_tables()
-create_db.create_tables()
-create_db.insert_strategies()
+drop_tables()
+create_tables()
+insert_strategies()
+populate_stocks()

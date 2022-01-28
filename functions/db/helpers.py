@@ -40,7 +40,7 @@ def sql_stmt_type(sql_stmt):
 def run_sql(sql_stmt):
     """Creates a connection and executes a sql statement. Returns a set of rows or none if its an insert update or delete."""
     connection = connect_pgdb()
-    cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cursor.execute(sql_stmt)
     rows = None
     stmt_type = sql_stmt_type(sql_stmt)

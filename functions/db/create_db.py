@@ -34,9 +34,6 @@ def create_tables():
             low NUMERIC NOT NULL, 
             close NUMERIC NOT NULL, 
             volume NUMERIC NOT NULL,
-            sma_20 NUMERIC,
-            sma_50 NUMERIC,
-            rsi_14 NUMERIC,
             FOREIGN KEY (stock_id) REFERENCES stock (id) ON DELETE CASCADE,
             UNIQUE (stock_id,date)
         )

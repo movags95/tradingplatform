@@ -1,7 +1,7 @@
+import functions.tradeapi.alpaca_config as config
+import functions.timezn.tzhelpers as timehelpers
+import functions.db.helpers as dbhelpers
 import alpaca_trade_api as tradeapi
-import tradeapi.config as config
-import db.helpers as dbhelpers
-import timezn.helpers as timehelpers
 from datetime import date, timedelta, datetime
 
 
@@ -41,9 +41,9 @@ def populate_stocks():
 
 
 def populate_stock_price_daily(
-    symbols, 
+    symbols=dbhelpers.existing_symbols(),
     Until=date.today(),
-    From=date.today() - timedelta(50)
+    From=date.today() - timedelta(1),
 ):
     """
     Function that populates the stock_price_daily table from alpaca.

@@ -1,4 +1,4 @@
-import db.helpers as helpers
+import functions.db.helpers as helpers
 
 def drop_schema():
     helpers.run_sql("DROP SCHEMA public CASCADE")

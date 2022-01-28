@@ -1,8 +1,11 @@
 from functions.db.helpers import insert_into_stock_price_daily_table, insert_into_stock_table, existing_symbols, symbol_to, get_symbol_dates
 from functions.timezn.tzhelpers import to_date, to_alpaca_timestamp_format
 from functions.tradeapi.alpaca_helpers import connect_api, list_assets, populate_stocks, populate_stock_price_daily
+from functions.ui.helpers import get_data_for_stocks_layout
 
-populate_stock_price_daily(['AAPL','MSFT'])
+rows = get_data_for_stocks_layout()
+print(rows)
+# populate_stock_price_daily(['AAPL','MSFT'])
 # from time import strptime
 # import tradeapi.alpaca_helpers as apihelpers
 # import db.helpers as dbhelpers

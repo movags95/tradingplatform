@@ -48,8 +48,8 @@ def populate_stock_price_daily(
     """
     Function that populates the stock_price_daily table from alpaca.
     Inputs:
-    - a list of symbols
-    - from/until is optional: date (default to todays date)
+    - a list of symbols. By default will use all symbols in the db.
+    - from/until is optional: date (default to todays date 1 days worth)
     """
     api = connect_api()
     chunk_size = config.ALPACA_REQUEST_LIMIT

@@ -1,2 +1,2 @@
-__all__ = ['functions', 'scheduled']
+__all__ = ['functions']
 from .functions import *

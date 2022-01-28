@@ -1,8 +1,6 @@
 import os,sys
-
-sys.path.append(os.getcwd()+'/functions')
-print(sys.path)
+sys.path.append(os.getcwd())
 
 import functions
-
-functions.alpaca_helpers.populate_stock_price_daily()
+symbols = functions.db.helpers.existing_symbols('NYSE')
+functions.alpaca_helpers.populate_stock_price_daily(symbols)

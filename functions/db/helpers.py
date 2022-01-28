@@ -54,9 +54,13 @@ def run_sql(sql_stmt):
 
     return rows
 
-def existing_symbols():
+def existing_symbols(exchange=None):
     """returns a list of existing symbols in the database."""
-    rows = run_sql("SELECT * FROM stock")
+    if exchange:
+        rows = run_sql(f"SELECT * FROM stock WHERE exchange = '{exchange}'")
+    else: 
+        rows = run_sql(f"SELECT * FROM stock")
+
     symbols = [row['symbol'] for row in rows]
     return symbols
 

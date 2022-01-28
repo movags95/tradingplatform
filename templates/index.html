@@ -1,0 +1,50 @@
+<!--main page with stocks list and ref to stock_detail.html-->
+{% extends "layout.html" %}
+
+{% block content %}
+            <h1>Stocks</h1>
+            <form method="get">
+                <select name="filter">
+                    <option value="">All stocks</option>
+                   <!-- <option {% if request.query_params.filter == 'new_closing_highs' %} selected="selected" {% endif %} value="new_closing_highs">New Closing Highs</option>
+                    <option {% if request.query_params.filter == 'new_closing_lows' %} selected="selected" {% endif %} value="new_closing_lows">New Closing Lows</option>
+                    <option {% if request.query_params.filter == 'rsi_overbought' %} selected="selected" {% endif %} value="rsi_overbought">RSI Overbought</option>
+                    <option {% if request.query_params.filter == 'rsi_oversold' %} selected="selected" {% endif %} value="rsi_oversold">RSI Oversold</option>
+                    <option {% if request.query_params.filter == 'above_sma20' %} selected="selected" {% endif %} value="above_sma20">Above SMA20</option>
+                    <option {% if request.query_params.filter == 'below_sma20' %} selected="selected" {% endif %} value="below_sma20">Below SMA20</option>
+                    <option {% if request.query_params.filter == 'above_sma50' %} selected="selected" {% endif %} value="above_sma50">Above SMA50</option>
+                    <option {% if request.query_params.filter == 'below_sma50' %} selected="selected" {% endif %} value="below_sma50">Below SMA50</option> -->
+                </select>
+                <input type="submit" />
+            </form>
+            <table class="ui selectable striped table">
+              <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Symbol</th>
+                    <th>Name</th>
+                    <th>Exchange</th>
+                    <th>Shortable</th>
+                    <th>Last Close</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for stock in stocks %}
+                <tr>
+                    <td>{{stock.id}}</td>
+                    <td><a href="/stock/{{ stock.symbol }}">{{stock.symbol}}</a></td>
+                    <td>{{stock.name}}</td>
+                    <td>{{stock.exchange}}</td>
+                    {% if stock.shortable == 1 %}
+                        <td>Y</td>
+                    {% elif stock.shortable == 0 %}
+                        <td>N</td>
+                    {% else %}
+                        <td>N/A</td>
+                    {% endif %}
+                    <td>{{stock.close}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+{% endblock %}

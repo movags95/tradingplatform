@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Strategies</h1>
+<table class="ui selectable striped table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Strategy</th>
+            <th>Description</th>
+            <th>Run Frequency</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for strategy in strategies %}
+        <tr>
+            <td>{{strategy.id}}</td>
+            <td><a href="/strategy/{{ strategy.id }}">{{strategy.name}}</a></td>
+            <td>{{strategy.description}}</td>
+            <td>{{strategy.run_frequency}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}

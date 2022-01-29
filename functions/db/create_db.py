@@ -79,3 +79,7 @@ def insert_strategies():
 
     print("Strategies inserted into strategy table.")
 
+def create_indexes():
+    helpers.run_sql('CREATE INDEX IF NOT EXISTS idx_spd_sid ON stock_price_daily(stock_id)')
+    helpers.run_sql('CREATE INDEX IF NOT EXISTS idx_spd_date ON stock_price_daily(date)')
+    print('Indexes created.')

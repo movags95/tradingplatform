@@ -5,7 +5,7 @@ import functions
 
 def main(exchange=None, symbol_list=None, start=None):
     if symbol_list is None:
-        symbols = functions.db.helpers.existing_symbols(exchange)
+        symbols = functions.db.helpers.get_existing_symbols(exchange)
     else:
         symbols = symbol_list
     if start is None:
@@ -14,4 +14,5 @@ def main(exchange=None, symbol_list=None, start=None):
         functions.alpaca_helpers.populate_stock_price_daily(symbols, From=start)
 
 if __name__ == '__main__':
-    main(symbol_list=['AAPL'], start="2021-06-01")
+    # main(symbol_list=['AAPL'], start="2021-06-01")
+    main(start="2022-01-01")

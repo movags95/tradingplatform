@@ -36,7 +36,6 @@ def sql_stmt_type(sql_stmt):
 
     return sql_type
 
-
 def run_sql(sql_stmt):
     """Creates a connection and executes a sql statement. Returns a set of rows or none if its an insert update or delete."""
     connection = connect_pgdb()
@@ -54,7 +53,7 @@ def run_sql(sql_stmt):
 
     return rows
 
-def existing_symbols(exchange=None):
+def get_existing_symbols(exchange=None):
     """returns a list of existing symbols in the database."""
     if exchange:
         rows = run_sql(f"SELECT * FROM stock WHERE exchange = '{exchange}'")

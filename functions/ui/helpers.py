@@ -1,4 +1,4 @@
-from functions.db.helpers import run_sql, existing_symbols, symbol_to
+from functions.db.helpers import run_sql, get_existing_symbols, symbol_to
 
 def get_data_for_page(stock_id=None, strategy_id=None):
     """returns all data for stocks in db to display in jinja2 template. stocks, prices, strategies"""

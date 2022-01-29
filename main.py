@@ -2,7 +2,7 @@
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
-from functions.db.helpers import get_dates_for_symbol, run_sql, insert_into_stock_strategy_table
+from functions.db.helpers import run_sql, insert_into_stock_strategy_table
 from functions.ui.helpers import get_data_for_page
 
 app = FastAPI()
@@ -69,3 +69,8 @@ def strategies(request: Request, strategy_id):
 def apply_strategy(strategy_id: int = Form(...), stock_id: int = Form(...)):
     insert_into_stock_strategy_table(stock_id, strategy_id)
     return RedirectResponse(url=f"/strategy/{strategy_id}", status_code=303)
+
+
+@app.post('/orders')
+def orders(request: Request):
+    pass

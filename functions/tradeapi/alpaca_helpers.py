@@ -28,7 +28,7 @@ def list_assets():
 
 def populate_stocks():
     assets = list_assets()
-    existing_symbols = dbhelpers.existing_symbols()
+    existing_symbols = dbhelpers.get_existing_symbols()
     print("Populating stocks from API.")
     for asset in assets:
         try:
@@ -41,7 +41,7 @@ def populate_stocks():
 
 
 def populate_stock_price_daily(
-    symbols=dbhelpers.existing_symbols(),
+    symbols=dbhelpers.get_existing_symbols(),
     Until=date.today(),
     From=date.today() - timedelta(1),
 ):

@@ -11,7 +11,7 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/") #function for the root page
 def stocks(request: Request):
-    
+    html = "page_stocks.html"
     data = run_sql("""
         SELECT s.id, symbol, name, exchange, shortable, close FROM stock s
         JOIN stock_price_daily spd
@@ -19,19 +19,19 @@ def stocks(request: Request):
         AND spd.date = (select max(date) as date from stock_price_daily)
         ORDER BY exchange desc, symbol
     """)
-
     headings = ['','ID', 'Symbol', 'Name', 'Exchange', 'Shortable', 'Last Close']
 
-    return templates.TemplateResponse("page_stocks.html", {'request': request, 'headings': headings, 'data':data})
+    return templates.TemplateResponse(html, {'request': request, 'headings': headings, 'data':data})
 
 
 @app.get('/stock/{stock_id}')
 def stock_detail(request: Request, stock_id):
-    stocks, prices, strategies= get_data_for_page(stock_id=stock_id)
+    html = "page_stock_detail.html"
+    stocks, prices, strategies= get_data_for_page(page=html, stock_id=stock_id)
     strategies = run_sql('SELECT * FROM strategy')
     headings = ['Date', 'Open', 'High', 'Low', 'Close', 'Volume']
 
-    return templates.TemplateResponse("page_stock_detail.html", {
+    return templates.TemplateResponse(html, {
         'request': request,
         'headings': headings, 
         'data': prices, 
@@ -42,10 +42,11 @@ def stock_detail(request: Request, stock_id):
 
 @app.get('/strategies')
 def strategies(request: Request):
-    strategies = get_data_for_page()[2]
+    html = "page_strategies.html"
+    strategies = get_data_for_page(page=html)[2]
     headings = ['', 'ID', 'Strategy', 'Description', 'Run Frequency']
 
-    return templates.TemplateResponse("page_strategies.html", {
+    return templates.TemplateResponse(html, {
         'request': request,
         'headings': headings, 
         'data': strategies
@@ -54,10 +55,11 @@ def strategies(request: Request):
 
 @app.get('/strategy/{strategy_id}')
 def strategies(request: Request, strategy_id):
-    stocks, prices, strategies= get_data_for_page(strategy_id=strategy_id)
+    html = "page_strategy_detail.html"
+    stocks, prices, strategies= get_data_for_page(page=html, strategy_id=strategy_id)
     headings = ['ID', 'Symbol', 'Name']
 
-    return templates.TemplateResponse("page_strategy_detail.html", {
+    return templates.TemplateResponse(html, {
         'request': request,
         'headings': headings, 
         'data': stocks,
@@ -73,4 +75,5 @@ def apply_strategy(strategy_id: int = Form(...), stock_id: int = Form(...)):
 
 @app.post('/orders')
 def orders(request: Request):
+    html="page_orders.html"
     pass

@@ -4,7 +4,7 @@ from functions.tradeapi.alpaca_helpers import connect_api, list_assets, populate
 from functions.ui.helpers import get_data_for_page
 from functions.db.create_db import create_indexes, create_tables, drop_schema, drop_tables, insert_strategies
 
-create_indexes()
+# create_indexes()
 # populate_stock_price_daily(['AAPL','MSFT'])
 # from time import strptime
 # import tradeapi.alpaca_helpers as apihelpers

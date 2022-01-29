@@ -1,0 +1,21 @@
+<!-- table of stock price details that form the drilldown-->
+{% extends "/layouts/layout.html" %}
+
+{% block content %}
+<h1><a href="/">Stocks</a> <i class="angle double right icon"></i> {{ stocks[0].name }} ({{ stocks[0].symbol }})</h1>
+
+{% include 'layouts/tradeview_widget.html'%}
+
+<form method="post" action="/apply-strategy">
+    <select name="strategy_id">
+        {% for strategy in strategies %}
+        <option value="{{ strategy.id }}">{{ strategy.name }}</option>
+        {% endfor %}
+    </select>
+    <input type="hidden" name="stock_id" value="{{ stocks[0].id }}" readonly />
+    <input type="submit" value="Apply Strategy"/>
+</form>
+            {% include "layouts/generic_table.html" %}
+            
+{% endblock %}
+

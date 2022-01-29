@@ -82,24 +82,15 @@ def insert_into_stock_price_daily_table(stock_id, date, open, high, low, close, 
     except Exception as e:
         print(e)
 
-# DECOMMISIONED
-# def symbol_max_date(symbol):
-#     """returns the max date that exists for a given symbol"""
-#     sid = None
-#     max_date = None
-#     try:
-#         rows = run_sql(f"""SELECT s.id as id, symbol, max(date) as date
-#                     FROM stock_price_daily spd 
-#                     JOIN stock s on s.id = spd.stock_id
-#                     WHERE symbol ='{symbol}'
-#                     GROUP BY s.id""")
-#         for row in rows:
-#             sid = row['id']
-#             max_date = row['date']
-#     except Exception as e:
-#         print(e)
-
-#     return sid, symbol, max_date
+def insert_into_stock_strategy_table(stock_id: int, strategy_id: int):
+    """inserts a record into the strategy table"""
+    try:
+        run_sql(f"""
+            INSERT INTO stock_strategy (stock_id, strategy_id)
+            VALUES ({stock_id}, {strategy_id})
+        """)
+    except Exception as e:
+        print(e)
 
 def symbol_to(symbol, _max_date=False, _id=True):
     """
@@ -147,7 +138,7 @@ def symbol_to(symbol, _max_date=False, _id=True):
 
     return dbsymbol, sid, name, exchange, shortable, max_date
 
-def get_symbol_dates(symbol):
+def get_dates_for_symbol(symbol):
     dates = []
     try:
         rows = run_sql(f"""
@@ -162,6 +153,7 @@ def get_symbol_dates(symbol):
         print(e)
 
     return dates
+
 
 
     

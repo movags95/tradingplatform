@@ -64,7 +64,7 @@ def populate_stock_price_daily(
                 start=dtstart, end=dtend
                 )
             for symbol in barsets:
-                dates = dbhelpers.get_symbol_dates(symbol)
+                dates = dbhelpers.get_dates_for_symbol(symbol)
                 stock_id = dbhelpers.symbol_to(symbol)[1]
                 for bar in barsets[symbol]:
                     if bar.t.date() not in dates:

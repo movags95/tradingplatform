@@ -1,0 +1,17 @@
+{% extends "/layouts/layout.html" %}
+
+{% block content %}
+
+    <h1>Candlestick Screener</h1>
+    
+    <form>
+        <select name='pattern'>
+            {% for pattern in patterns %}
+                <option value='{{pattern}}'>{{patterns[pattern]}}</option>
+            {% endfor %}
+        </select>
+        <input type='submit' value='Scan'/>
+    </form>
+
+
+{% endblock %}

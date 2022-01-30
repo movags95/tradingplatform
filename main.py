@@ -1,9 +1,16 @@
-# from datetime import date, timedelta
+import os
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from functions.db.helpers import run_sql, insert_into_stock_strategy_table
+from functions.tradeapi.alpaca_helpers import get_ohlc_snapshot_to_csv
 from functions.ui.helpers import get_data_for_page
+import data.talib_indicators as talib_indicators
+
+import pandas as pd
+import talib
+
+
 
 app = FastAPI()
 
@@ -73,7 +80,40 @@ def apply_strategy(strategy_id: int = Form(...), stock_id: int = Form(...)):
     return RedirectResponse(url=f"/strategy/{strategy_id}", status_code=303)
 
 
-@app.post('/orders')
-def orders(request: Request):
-    html="page_orders.html"
-    pass
+@app.get('/candlesticks')
+def candlestick_screener(request: Request):
+    html = "page_candlesticks.html"
+    pattern = request.query_params.get('pattern', None)
+    if pattern:
+        datafiles = os.listdir('data/daily')
+        for filename in datafiles:
+            df = pd.read_csv(f'data/daily/{filename}')
+            function4pattern = getattr(talib, pattern)
+            symbol = filename.split('.')[0]
+            print(symbol)
+            try:
+                result = function4pattern(df['open'], df['high'], df['low'], df['close'])
+                last = result.tail(1).values[0]
+                if last > 0:
+                    pass
+                elif last < 0:
+                    pass
+
+            except Exception as e:
+                print(f'Unable to produce results for {filename}')
+
+
+    return templates.TemplateResponse(html, {
+        'request': request,
+        'patterns': talib_indicators.candlestick_functions
+        })
+
+@app.get('/snapshot')
+def snapshot(request: Request):
+    get_ohlc_snapshot_to_csv()
+
+
+# @app.post('/orders')
+# def orders(request: Request):
+#     html="page_orders.html"
+#     pass

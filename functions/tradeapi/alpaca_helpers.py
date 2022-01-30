@@ -1,14 +1,16 @@
+from ctypes import util
 import functions.tradeapi.alpaca_config as config
 import functions.timezn.tzhelpers as timehelpers
 import functions.db.helpers as dbhelpers
 import alpaca_trade_api as tradeapi
 from datetime import date, timedelta, datetime
+import functions.utility
 
 
-def connect_api():
+def connect_api(url=config.ALPACA_BASE_URL):
     try:
         api = tradeapi.REST(config.ALPACA_API_KEY,
-                            config.ALPACA_API_SECRET_KEY, config.ALPACA_BASE_URL)
+                            config.ALPACA_API_SECRET_KEY,url)
         print("API connection successful.")
     except Exception as e:
         print(e)
@@ -24,6 +26,13 @@ def list_assets():
         print(e)
 
     return assets
+
+
+def get_barset(symbols, start, end=date.today(), timeframe='1Day', limit=50):
+    api = tradeapi.REST(config.ALPACA_API_KEY,config.ALPACA_API_SECRET_KEY)
+    barset = api.get_bars(symbol=symbols, timeframe=timeframe,start=start, end=end, limit=limit)
+    return barset
+    
 
 
 def populate_stocks():
@@ -78,4 +87,11 @@ def populate_stock_price_daily(
 
     except Exception as e:
         print(e)
+
+def get_ohlc_snapshot_to_csv():
+    api = connect_api()
+    symbols = functions.utility.companies_csv_to_symbols_list()
+    for symbol in symbols:
+        barset = api.get_bars(symbol=[symbol], timeframe='1Day',start=date.today()-timedelta(100), end=date.today()-timedelta(1)).df
+        barset.to_csv(f'data/daily/{symbol}.csv')
                 

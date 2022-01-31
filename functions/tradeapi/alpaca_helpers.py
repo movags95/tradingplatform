@@ -90,7 +90,7 @@ def populate_stock_price_daily(
 
 def get_ohlc_snapshot_to_csv():
     api = connect_api()
-    symbols = functions.utility.companies_csv_to_symbols_list()
+    companies, symbols = functions.utility.companies_csv_to_dict()
     for symbol in symbols:
         barset = api.get_bars(symbol=[symbol], timeframe='1Day',start=date.today()-timedelta(100), end=date.today()-timedelta(1)).df
         barset.to_csv(f'data/daily/{symbol}.csv')

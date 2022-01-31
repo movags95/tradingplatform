@@ -5,6 +5,7 @@ from fastapi.responses import RedirectResponse
 from functions.db.helpers import run_sql, insert_into_stock_strategy_table
 from functions.tradeapi.alpaca_helpers import get_ohlc_snapshot_to_csv
 from functions.ui.helpers import get_data_for_page
+from functions.utility import companies_csv_to_dict
 import data.talib_indicators as talib_indicators
 
 import pandas as pd
@@ -83,21 +84,24 @@ def apply_strategy(strategy_id: int = Form(...), stock_id: int = Form(...)):
 @app.get('/candlesticks')
 def candlestick_screener(request: Request):
     html = "page_candlesticks.html"
+    companies, symbols = companies_csv_to_dict()
     pattern = request.query_params.get('pattern', None)
+    
     if pattern:
         datafiles = os.listdir('data/daily')
         for filename in datafiles:
             df = pd.read_csv(f'data/daily/{filename}')
             function4pattern = getattr(talib, pattern)
             symbol = filename.split('.')[0]
-            print(symbol)
             try:
                 result = function4pattern(df['open'], df['high'], df['low'], df['close'])
                 last = result.tail(1).values[0]
                 if last > 0:
-                    pass
+                    companies[symbol][pattern] = 'bullish'
                 elif last < 0:
-                    pass
+                    companies[symbol][pattern] = 'bearish'
+                else:
+                    companies[symbol][pattern] = None
 
             except Exception as e:
                 print(f'Unable to produce results for {filename}')
@@ -105,7 +109,9 @@ def candlestick_screener(request: Request):
 
     return templates.TemplateResponse(html, {
         'request': request,
-        'patterns': talib_indicators.candlestick_functions
+        'patterns': talib_indicators.candlestick_functions,
+        'companies': companies,
+        'selected_pattern': pattern
         })
 
 @app.get('/snapshot')

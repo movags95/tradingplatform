@@ -1,4 +1,3 @@
-from cProfile import run
 import psycopg2
 import psycopg2.extras
 import functions.db.config as config

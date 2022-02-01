@@ -92,9 +92,12 @@ def get_ohlc_snapshot_to_csv():
     """Gets a snapshot of data for all the symbols in the data/companies dir"""
     api = connect_api()
     companies, symbols = functions.utility.companies_csv_to_dict()
+    print('Taking snapshot for: {}'.format(date.today()-timedelta(1)))
     for symbol in symbols:
+        print('File {} updated.'.format(f'{symbol}.csv'))
         barset = api.get_bars(symbol=[symbol], timeframe='1Day',start=date.today()-timedelta(100), end=date.today()-timedelta(1)).df
         barset.to_csv(f'data/daily/{symbol}.csv')
+    print('Snapshot complete.')
     
 def get_ohlc_wl_snapshot_to_csv():
     """Gets a snapshot of data for all the symbols in the watchlist dir"""

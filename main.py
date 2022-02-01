@@ -154,10 +154,6 @@ def watchlist_detail(request: Request, watchlist_id):
         'watchlist': watchlist
         })
 
-# @app.get('/snapshot')
-# def snapshot(request: Request):
-#     get_ohlc_snapshot_to_csv()
-
 @app.post("/create-watchlist")
 def create_watchlist(new_watchlist_name: str = Form(...)):
     try:
@@ -200,6 +196,11 @@ def delete_from_watchlist(request: Request, watchlist_id, stock_id):
         delete_from_stock_watchlist_table(watchlist_id, stock_id)
 
     return RedirectResponse(url=f"/watchlist/{watchlist_id}", status_code=303)
+
+@app.get('/snapshot')
+def snapshot(request: Request):
+    get_ohlc_snapshot_to_csv()
+    return RedirectResponse(url=f"/", status_code=303)
 
 # @app.post('/orders')
 # def orders(request: Request):

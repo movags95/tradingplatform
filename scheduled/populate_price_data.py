@@ -14,5 +14,5 @@ def main(exchange=None, symbol_list=None, start=None):
         functions.alpaca_helpers.populate_stock_price_daily(symbols, From=start)
 
 if __name__ == '__main__':
-    # main(symbol_list=['AAPL'], start="2021-06-01")
-    main(symbol_list=['AAPL','MSFT'], start="2022-01-01")
+    main()
+    # main(symbol_list=['AAPL','MSFT'], start="2022-01-01")

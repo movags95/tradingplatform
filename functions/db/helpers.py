@@ -93,6 +93,24 @@ def insert_into_stock_strategy_table(stock_id: int, strategy_id: int):
     except Exception as e:
         print(e)
 
+def delete_from_stock_strategy_table(strategy_id, stock_id):
+    """Deletes a record from stock strategy table"""
+    try:
+        run_sql(f"""
+            DELETE FROM stock_strategy WHERE strategy_id = {strategy_id} and stock_id = {stock_id}
+        """)
+    except Exception as e:
+        print(e)
+
+def delete_from_stock_watchlist_table(watchlist_id, stock_id):
+    """Deletes a record into the stockwatchlist table"""
+    try:
+        run_sql(f"""
+            DELETE FROM stock_watchlist WHERE watchlist_id = {watchlist_id} and stock_id = {stock_id}
+        """)
+    except Exception as e:
+        print(e)
+
 def insert_into_watchlist_table(name):
     """inserts a record into the watchlist table"""
     try:
@@ -130,6 +148,8 @@ def delete_from_stock_watchlist_table(watchlist_id, stock_id):
         """)
     except Exception as e:
         print(e)
+
+
 
 def symbol_to(symbol, _max_date=False, _id=True):
     """

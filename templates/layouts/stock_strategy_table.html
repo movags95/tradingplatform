@@ -1,0 +1,21 @@
+
+
+<table class="ui selectable striped table">
+    <thead>
+        <tr>
+            {% for header in headings %}
+            <th>{{ header }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in data %}
+        <tr>
+            {% for cell in row %}
+            <td>{{ cell }}</td>
+            {% endfor %}
+            <td><a href='/delete-from-stock-strategy-table/{{strategy[0][0]}}/{{row.id}}'><i class='trash icon'></i></a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

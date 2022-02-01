@@ -2,11 +2,13 @@ import os
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
-from functions.db.helpers import delete_from_stock_watchlist_table, delete_from_watchlist_table, get_watchlists_dict, insert_into_stock_watchlist_table, run_sql, insert_into_stock_strategy_table, insert_into_watchlist_table, get_stock_watctchlist_dict, delete_from_watchlist_table
+from functions.db.helpers import delete_from_stock_watchlist_table, delete_from_watchlist_table, get_watchlists_dict, insert_into_stock_watchlist_table, run_sql, insert_into_stock_strategy_table, insert_into_watchlist_table, delete_from_stock_strategy_table, get_stock_watctchlist_dict, delete_from_watchlist_table
 from functions.tradeapi.alpaca_helpers import get_ohlc_snapshot_to_csv
 from functions.ui.helpers import get_data_for_page
 from functions.utility import companies_csv_to_dict
 import data.talib_indicators as talib_indicators
+import pandas as pd
+import talib 
 
 app = FastAPI()
 
@@ -69,7 +71,7 @@ def strategies(request: Request):
 def strategies(request: Request, strategy_id):
     html = "page_strategy_detail.html"
     stocks, prices, strategies= get_data_for_page(page=html, strategy_id=strategy_id)
-    headings = ['ID', 'Symbol', 'Name']
+    headings = ['ID', 'Symbol', 'Name', '']
 
     return templates.TemplateResponse(html, {
         'request': request,
@@ -82,6 +84,17 @@ def strategies(request: Request, strategy_id):
 def apply_strategy(strategy_id: int = Form(...), stock_id: int = Form(...)):
     insert_into_stock_strategy_table(stock_id, strategy_id)
     return RedirectResponse(url=f"/strategy/{strategy_id}", status_code=303)
+
+@app.get("/delete-from-stock-strategy-table/{strategy_id}/{stock_id}")
+def delete_from_stock_strategy(request: Request, strategy_id, stock_id):
+    try:
+        strategy_id = int(strategy_id)
+        delete_from_stock_strategy_table(strategy_id, stock_id)
+        print(f'Strategy deleted.')
+    except:
+        pass
+    return RedirectResponse(url=f"/strategy/{strategy_id}", status_code=303)
+
 
 @app.get('/candlesticks')
 def candlestick_screener(request: Request):
@@ -156,7 +169,6 @@ def create_watchlist(new_watchlist_name: str = Form(...)):
 
 @app.get('/delete-watchlist/{watchlist_id}')
 def delete_watchlist(request: Request, watchlist_id):
-    print(watchlist_id)
     try:
         watchlist_id = int(watchlist_id)
         delete_from_watchlist_table(watchlist_id)

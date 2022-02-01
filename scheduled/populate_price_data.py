@@ -15,4 +15,4 @@ def main(exchange=None, symbol_list=None, start=None):
 
 if __name__ == '__main__':
     # main(symbol_list=['AAPL'], start="2021-06-01")
-    main(start="2022-01-01")
+    main(symbol_list=['AAPL','MSFT'], start="2022-01-01")

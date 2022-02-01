@@ -1,6 +1,8 @@
+from cProfile import run
 import psycopg2
 import psycopg2.extras
 import functions.db.config as config
+from functions.utility import append_value_to_key
 
 
 def connect_pgdb(hostname="localhost", db_name="tradingplatform", username="postgres", passwd="postgres", port=5555):
@@ -91,6 +93,35 @@ def insert_into_stock_strategy_table(stock_id: int, strategy_id: int):
     except Exception as e:
         print(e)
 
+def insert_into_watchlist_table(name):
+    """inserts a record into the watchlist table"""
+    try:
+        run_sql(f"""
+            INSERT INTO watchlist (name)
+            VALUES ('{name}')
+        """)
+    except Exception as e:
+        print(e)
+
+def insert_into_stock_watchlist_table(watchlist_id, stock_id):
+    """inserts a record into the stockwatchlist table"""
+    try:
+        run_sql(f"""
+            INSERT INTO stock_watchlist (watchlist_id, stock_id)
+            VALUES ({watchlist_id},{stock_id})
+        """)
+    except Exception as e:
+        print(e)
+
+def delete_from_stock_watchlist_table(watchlist_id, stock_id):
+    """Deletes a record into the stockwatchlist table"""
+    try:
+        run_sql(f"""
+            DELETE FROM stock_watchlist WHERE watchlist_id = {watchlist_id} and stock_id = {stock_id}
+        """)
+    except Exception as e:
+        print(e)
+
 def symbol_to(symbol, _max_date=False, _id=True):
     """
     Rerturns DB stock info on a given symbol.
@@ -152,6 +183,26 @@ def get_dates_for_symbol(symbol):
         print(e)
 
     return dates
+
+def get_watchlists_dict():
+    data = run_sql('SELECT * FROM watchlist')
+    watchlist_dict = {}
+    if data:
+        for watchlist in data:
+            watchlist_dict[watchlist[0]] = watchlist[1]
+    
+    return watchlist_dict
+
+def get_stock_watctchlist_dict():
+    data = run_sql("""
+        SELECT * FROM stock_watchlist ORDER BY watchlist_id
+    """)
+    
+    stock_watchlist_dict = {}
+    for stock_watchlist in data:
+        append_value_to_key(stock_watchlist_dict, stock_watchlist[0], stock_watchlist[1])
+
+    return stock_watchlist_dict
 
 
 

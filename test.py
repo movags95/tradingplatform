@@ -1,6 +1,6 @@
 from tracemalloc import start
 from aiohttp import request
-from functions.db.helpers import insert_into_stock_price_daily_table, insert_into_stock_table, get_existing_symbols, symbol_to, get_dates_for_symbol, insert_into_stock_strategy_table
+from functions.db.helpers import connect_pgdb, insert_into_stock_price_daily_table, insert_into_stock_table, get_existing_symbols, run_sql, symbol_to, get_dates_for_symbol, insert_into_stock_strategy_table, get_watchlists_dict, get_stock_watctchlist_dict
 from functions.timezn.tzhelpers import to_date, to_alpaca_timestamp_format
 from functions.tradeapi.alpaca_helpers import connect_api, get_barset, list_assets, populate_stocks, populate_stock_price_daily
 from functions.ui.helpers import get_data_for_page
@@ -12,13 +12,23 @@ import pandas as pd
 from datetime import date, timedelta
 from alpaca_trade_api import REST
 import talib
+from functions.utility import append_value_to_key
 
-api = connect_api()
-symbols = get_existing_symbols('AMEX')
-# symbols = ["AAPL"]
-for symbol in symbols:
-    barset = api.get_bars(symbol=[symbol], timeframe='1Day',start=date.today()-timedelta(100), end=date.today()-timedelta(1)).df
-    barset.to_csv(f'data/daily/{symbol}.csv')
+# from functions.utility import watchlist_to_dict
+
+selected_watchlist_id = 1
+dict = get_stock_watctchlist_dict()
+for item in dict:
+    if item == selected_watchlist_id:
+        print(dict[item])
+
+
+# watchlists = get_watchlists_dict()
+# for item in watchlists:
+#     print(watchlists[item])
+
+# print(watchlists)
+
 # morning_stars = talib.CDLMORNINGSTAR(barset['open'], barset['high'], barset['low'], barset['close'])
 # engulfing = talib.CDLENGULFING(barset['open'], barset['high'], barset['low'], barset['close'])
 # barset['Morning Star'] = morning_stars

@@ -15,6 +15,14 @@
             {% for cell in row %}
             <td>{{ cell }}</td>
             {% endfor %}
+            {% if selected_watchlist_id %}
+                {% if row.id in stock_watchlist[selected_watchlist_id] %}
+                            <td><a href='/delete-from-watchlist/{{selected_watchlist_id}}/{{row.id}}'><i class='clipboard icon'></i></a></td>
+                {% else %}
+                            <td><a href='/add-to-watchlist/{{selected_watchlist_id}}/{{row.id}}'><i class='clipboard outline icon'></i></a></td>
+                {% endif %}
+            {% endif %}
+            
         </tr>
         {% endfor %}
     </tbody>

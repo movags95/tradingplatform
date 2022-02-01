@@ -7,14 +7,20 @@ from functions.ui.helpers import get_data_for_page
 from functions.db.create_db import create_indexes, create_tables, drop_schema, drop_tables, insert_strategies
 import requests
 import functions.tradeapi.alpaca_config as config
-import json
+import json,os
 import pandas as pd
 from datetime import date, timedelta
 from alpaca_trade_api import REST
 import talib
 from functions.utility import append_value_to_key
 
-delete_from_watchlist_table(10)
+datafiles = os.listdir('data/daily')
+for filename in datafiles:
+    df = pd.read_csv(f'data/daily/{filename}', encoding='unicode_escape')
+    print(df)
+   
+
+# delete_from_watchlist_table(10)
 # from functions.utility import watchlist_to_dict
 
 # selected_watchlist_id = 1

@@ -8,7 +8,7 @@ from functions.ui.helpers import get_data_for_page
 from functions.utility import companies_csv_to_dict
 import data.talib_indicators as talib_indicators
 import pandas as pd
-import talib 
+import talib
 
 app = FastAPI()
 
@@ -105,7 +105,10 @@ def candlestick_screener(request: Request):
     if pattern:
         datafiles = os.listdir('data/daily')
         for filename in datafiles:
-            df = pd.read_csv(f'data/daily/{filename}')
+            try:
+                df = pd.read_csv(f'data/daily/{filename}', encoding='unicode_escape')
+            except:
+                df = None
             function4pattern = getattr(talib, pattern)
             symbol = filename.split('.')[0]
             try:

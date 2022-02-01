@@ -1,0 +1,16 @@
+<!--main page with stocks list and ref to stock_detail.html-->
+{% extends "/layouts/layout.html" %}
+
+{% block content %}
+
+    <h1> Watchlists </h1>
+    <form method="post" action="/create-watchlist">
+        <input type='text' name='new_watchlist_name' />
+        <input type='submit' value='Create new watchlist'/>
+    </form>
+
+    
+    {% include "/layouts/watchlists_table.html"%}
+
+
+{% endblock %}

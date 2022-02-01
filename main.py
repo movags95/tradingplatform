@@ -126,18 +126,17 @@ def candlestick_screener(request: Request):
         'selected_pattern': pattern
         })
 
-# @app.get('/strategy/{strategy_id}')
-# def strategies(request: Request, strategy_id):
-#     html = "page_strategy_detail.html"
-#     stocks, prices, strategies= get_data_for_page(page=html, strategy_id=strategy_id)
-#     headings = ['ID', 'Symbol', 'Name']
+@app.get('/watchlists')
+def watchlists(request: Request):
+    html = "page_watchlists.html"
+    watchlists = get_data_for_page(page=html)
+    headings = ['ID', 'Name']
 
-#     return templates.TemplateResponse(html, {
-#         'request': request,
-#         'headings': headings, 
-#         'data': stocks,
-#         'strategy': strategies
-#         })
+    return templates.TemplateResponse(html, {
+        'request': request,
+        'headings': headings, 
+        'data': watchlists
+        })
 
 # @app.get('/snapshot')
 # def snapshot(request: Request):

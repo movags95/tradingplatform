@@ -1,0 +1,11 @@
+<!-- table of stock price details that form the drilldown-->
+{% extends "/layouts/layout.html" %}
+
+{% block content %}
+<h1><a href="/watchlists">Watchlist</a> <i class="angle double right icon"></i> {{ watchlist[0].name }}</h1>
+
+
+            {% include "layouts/stock_watchlist_table.html" %}
+            
+{% endblock %}
+

@@ -2,16 +2,11 @@ import os
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
-from functions.db.helpers import delete_from_stock_watchlist_table, get_watchlists_dict, insert_into_stock_watchlist_table, run_sql, insert_into_stock_strategy_table, insert_into_watchlist_table, get_stock_watctchlist_dict
+from functions.db.helpers import delete_from_stock_watchlist_table, delete_from_watchlist_table, get_watchlists_dict, insert_into_stock_watchlist_table, run_sql, insert_into_stock_strategy_table, insert_into_watchlist_table, get_stock_watctchlist_dict, delete_from_watchlist_table
 from functions.tradeapi.alpaca_helpers import get_ohlc_snapshot_to_csv
 from functions.ui.helpers import get_data_for_page
 from functions.utility import companies_csv_to_dict
 import data.talib_indicators as talib_indicators
-
-import pandas as pd
-import talib
-
-
 
 app = FastAPI()
 
@@ -43,7 +38,6 @@ def stocks(request: Request):
      'stock_watchlist': stock_watchlist
     })
 
-
 @app.get('/stock/{stock_id}')
 def stock_detail(request: Request, stock_id):
     html = "page_stock_detail.html"
@@ -59,7 +53,6 @@ def stock_detail(request: Request, stock_id):
         'strategies': strategies
         })
 
-
 @app.get('/strategies')
 def strategies(request: Request):
     html = "page_strategies.html"
@@ -71,7 +64,6 @@ def strategies(request: Request):
         'headings': headings, 
         'data': strategies
         })
-
 
 @app.get('/strategy/{strategy_id}')
 def strategies(request: Request, strategy_id):
@@ -86,12 +78,10 @@ def strategies(request: Request, strategy_id):
         'strategy': strategies
         })
 
-
 @app.post("/apply-strategy")
 def apply_strategy(strategy_id: int = Form(...), stock_id: int = Form(...)):
     insert_into_stock_strategy_table(stock_id, strategy_id)
     return RedirectResponse(url=f"/strategy/{strategy_id}", status_code=303)
-
 
 @app.get('/candlesticks')
 def candlestick_screener(request: Request):
@@ -130,12 +120,25 @@ def candlestick_screener(request: Request):
 def watchlists(request: Request):
     html = "page_watchlists.html"
     watchlists = get_data_for_page(page=html)
-    headings = ['ID', 'Name']
+    headings = ['','ID', 'Name','Delete?']
 
     return templates.TemplateResponse(html, {
         'request': request,
         'headings': headings, 
         'data': watchlists
+        })
+
+@app.get('/watchlist/{watchlist_id}')
+def watchlist_detail(request: Request, watchlist_id):
+    html = "page_watchlist_detail.html"
+    watchlist, stocks = get_data_for_page(page=html, watchlist_id=watchlist_id)
+    headings = ['', 'ID', 'Symbol', 'Name', 'Exchange', 'Shortable', '']
+
+    return templates.TemplateResponse(html, {
+        'request': request,
+        'headings': headings, 
+        'data': stocks,
+        'watchlist': watchlist
         })
 
 # @app.get('/snapshot')
@@ -149,7 +152,18 @@ def create_watchlist(new_watchlist_name: str = Form(...)):
         print(f'Watchlist: {new_watchlist_name} created.')
     except:
         pass
-    return RedirectResponse(url="/", status_code=303)
+    return RedirectResponse(url="/watchlists", status_code=303)
+
+@app.get('/delete-watchlist/{watchlist_id}')
+def delete_watchlist(request: Request, watchlist_id):
+    print(watchlist_id)
+    try:
+        watchlist_id = int(watchlist_id)
+        delete_from_watchlist_table(watchlist_id)
+        print(f'Watchlist deleted.')
+    except:
+        pass
+    return RedirectResponse(url="/watchlists", status_code=303)
 
 @app.get('/add-to-watchlist/{watchlist_id}/{stock_id}')
 def add_to_watchlist(request: Request, watchlist_id, stock_id):
@@ -166,6 +180,14 @@ def delete_from_watchlist(request: Request, watchlist_id, stock_id):
         delete_from_stock_watchlist_table(watchlist_id, stock_id)
 
     return RedirectResponse(url=f"/?selected_watchlist={watchlist_id}", status_code=303)
+
+@app.get('/delete-from-watchlist-redirect-wl/{watchlist_id}/{stock_id}')
+def delete_from_watchlist(request: Request, watchlist_id, stock_id):
+    watchlist_dict = get_stock_watctchlist_dict()
+    if watchlist_id and stock_id and watchlist_dict[int(watchlist_id)]:
+        delete_from_stock_watchlist_table(watchlist_id, stock_id)
+
+    return RedirectResponse(url=f"/watchlist/{watchlist_id}", status_code=303)
 
 # @app.post('/orders')
 # def orders(request: Request):

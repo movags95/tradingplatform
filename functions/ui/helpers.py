@@ -1,3 +1,4 @@
+from cProfile import run
 from functions.db.helpers import run_sql
 
 def get_data_for_page(page=None, stock_id=None, strategy_id=None, watchlist_id=None):
@@ -46,13 +47,20 @@ def get_data_for_page(page=None, stock_id=None, strategy_id=None, watchlist_id=N
                 SELECT * FROM strategy
             """)
             return stocks, prices, strategies
-    elif page == 'page_watchlists.html':
+    elif page == 'page_watchlists.html' or page == 'page_watchlist_detail.html':
         if watchlist_id:
-            watchlists = run_sql(f'SELECT * FROM watchlist WHERE id = {watchlist_id}')
+            watchlist = run_sql(f'SELECT * FROM watchlist WHERE id = {watchlist_id}')
+            stocks = run_sql(f"""
+                SELECT s.id, symbol, s.name, exchange, shortable FROM stock_watchlist w
+                JOIN stock s ON s.id = w.stock_id
+                WHERE watchlist_id = {watchlist_id}
+            """)
+            return watchlist, stocks
         else:
             watchlists = run_sql(f'SELECT * FROM watchlist')
+            return watchlists
 
-        return watchlists
+        
 
     # return stocks, prices, strategies
 

@@ -103,6 +103,15 @@ def insert_into_watchlist_table(name):
     except Exception as e:
         print(e)
 
+def delete_from_watchlist_table(watchlist_id):
+    """Deletes a record into the watchlist table"""
+    try:
+        run_sql(f"""
+            DELETE FROM watchlist WHERE id = {watchlist_id}
+        """)
+    except Exception as e:
+        print(e)
+
 def insert_into_stock_watchlist_table(watchlist_id, stock_id):
     """inserts a record into the stockwatchlist table"""
     try:

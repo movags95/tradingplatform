@@ -3,3 +3,12 @@ pip3 install alpaca_trade_api
 pip3 install fastapi
 pip3 install uvicorn
 pip3 install python-multipart
+pip3 install TA-lib #had to install from brew to get it to work
+
+<td><a href='/add-to-watchlist/{{selected_watchlist_id}}/{{row.id}}'>
+                    {% if row.id in stock_watchlist[selected_watchlist_id] %}
+                        <i class='clipboard icon'></i>
+                    {% else %}
+                        <i class='clipboard outline icon'></i>
+                    {% endif %}
+            </a></td>

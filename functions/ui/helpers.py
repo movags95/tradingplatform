@@ -1,10 +1,12 @@
-from functions.db.helpers import run_sql, get_existing_symbols, symbol_to
+from cProfile import run
+from functions.db.helpers import run_sql
 
-def get_data_for_page(page=None, stock_id=None, strategy_id=None):
+def get_data_for_page(page=None, stock_id=None, strategy_id=None, watchlist_id=None):
     """returns all data for stocks in db to display in jinja2 template. stocks, prices, strategies"""
     stocks = []
     prices = []
     strategies = []
+    watchlists = []
     
     if page == 'page_stock_detail.html':
         if stock_id:
@@ -23,6 +25,7 @@ def get_data_for_page(page=None, stock_id=None, strategy_id=None):
                 JOIN stock s on s.id = ss.stock_id
                 WHERE ss.stock_id = {stock_id}
             """)
+            return stocks, prices, strategies
     elif page == 'page_strategies.html' or page == 'page_strategy_detail.html':
         if strategy_id:
             stocks = run_sql(f"""
@@ -36,11 +39,28 @@ def get_data_for_page(page=None, stock_id=None, strategy_id=None):
                 SELECT * FROM strategy
                 WHERE id = {strategy_id}
             """)
+            return stocks, prices, strategies
         else:
             stocks = []
             prices = []
             strategies = run_sql(f"""
                 SELECT * FROM strategy
             """)
+            return stocks, prices, strategies
+    elif page == 'page_watchlists.html' or page == 'page_watchlist_detail.html':
+        if watchlist_id:
+            watchlist = run_sql(f'SELECT * FROM watchlist WHERE id = {watchlist_id}')
+            stocks = run_sql(f"""
+                SELECT s.id, symbol, s.name, exchange, shortable FROM stock_watchlist w
+                JOIN stock s ON s.id = w.stock_id
+                WHERE watchlist_id = {watchlist_id}
+            """)
+            return watchlist, stocks
+        else:
+            watchlists = run_sql(f'SELECT * FROM watchlist')
+            return watchlists
 
-    return stocks, prices, strategies
+        
+
+    # return stocks, prices, strategies
+

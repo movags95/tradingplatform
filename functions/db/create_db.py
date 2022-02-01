@@ -10,6 +10,8 @@ def drop_tables():
     helpers.run_sql("DROP TABLE stock_price_daily CASCADE")
     helpers.run_sql("DROP TABLE strategy CASCADE")
     helpers.run_sql("DROP TABLE stock_strategy CASCADE")
+    helpers.run_sql("DROP TABLE watchlist CASCADE")
+    helpers.run_sql("DROP TABLE stock_watchlist CASCADE")
     print("Dropped all tables.")
 
 def create_tables():
@@ -52,7 +54,7 @@ def create_tables():
 
     helpers.run_sql("""
         CREATE TABLE IF NOT EXISTS stock_strategy (
-            stock_id SERIAL NOT NULL, 
+            stock_id INTEGER NOT NULL, 
             strategy_id INTEGER NOT NULL,
             FOREIGN KEY (stock_id) REFERENCES stock (id) ON DELETE CASCADE,
             FOREIGN KEY (strategy_id) REFERENCES strategy (id) ON DELETE CASCADE,
@@ -60,6 +62,26 @@ def create_tables():
         )
     """)
     print("Stock strategy table created.")
+
+    helpers.run_sql("""
+        CREATE TABLE IF NOT EXISTS watchlist (
+            id SERIAL PRIMARY KEY, 
+            name TEXT NOT NULL,
+            UNIQUE (name)
+        )
+    """)
+    print("Watchlist table created.")
+
+    helpers.run_sql("""
+        CREATE TABLE IF NOT EXISTS stock_watchlist (
+            watchlist_id INTEGER NOT NULL, 
+            stock_id INTEGER NOT NULL,
+            FOREIGN KEY (stock_id) REFERENCES stock (id) ON DELETE CASCADE,
+            FOREIGN KEY (watchlist_id) REFERENCES watchlist (id) ON DELETE CASCADE,
+            UNIQUE (watchlist_id, stock_id)
+        )
+    """)
+    print("Stock watchlist table created.")
 
 def insert_strategies():
     helpers.run_sql("""

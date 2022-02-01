@@ -1,0 +1,35 @@
+{% extends "/layouts/layout.html" %}
+
+{% block content %}
+
+    <h1>Candlestick Screener</h1>
+    
+    <form>
+        <select name='pattern'>
+            {% for pattern in patterns %}
+                <option value='{{pattern}}' {% if pattern == selected_pattern %}selected='selected' {% endif %}>{{patterns[pattern]}}</option>
+            {% endfor %}
+        </select>
+        <input type='submit' value='Scan'/>
+    </form>
+    <table class="ui striped table">
+        <tr>
+            <th>Symbol</th>
+            <th>Name</th>
+            <th>Signal</th>
+        </tr>
+        <tr>
+        {% for company in companies %}
+            {% if companies[company][selected_pattern] %}
+                <tr>
+                    <td>{{company}}</td>
+                    <td>{{companies[company]['company']}}</td>
+                    <td class='{{companies[company][selected_pattern]}}'>{{companies[company][selected_pattern]}}</td>
+                </tr>
+                <tr>
+                    <td colspan='3'><img src="https://finviz.com/chart.ashx?t={{ company }}&ty=c&ta=1&p=d&s=l" /></td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+{% endblock %}

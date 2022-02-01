@@ -4,7 +4,26 @@
 {% block content %}
 
     <h1> Stocks </h1>
-    {% include "/layouts/stocks_table.html"%}}}
+    {# <form method="post" action="/create-watchlist">
+        <input type='text' name='new_watchlist_name' />
+        <input type='submit' value='Create new watchlist'/>
+    </form> #}
+
+    <form>
+        <select name='selected_watchlist'>
+            {% for watchlist in watchlists %}
+                <option value='{{watchlist}}' {% if watchlist == selected_watchlist_id %} selected='selected' {% endif %}> {{watchlists[watchlist]}}</option>
+            {% endfor %}
+        </select>
+        <input type='submit' value='Select Watchlist'>
+    </form>
+    {% for watchlist in watchlists %}
+        {% if watchlist == selected_watchlist_id %}
+            <p>Selected watchlist: {{watchlists[watchlist]}}</p>
+        {% endif %}
+    {% endfor %}
+    
+    {% include "/layouts/stocks_table.html"%}
 
 
 {% endblock %}
